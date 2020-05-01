@@ -5,7 +5,7 @@ import { OpenrpcDocument } from "@open-rpc/meta-schema";
 import { parseOpenRPCDocument } from "@open-rpc/schema-utils-js";
 import methodMapping from "./generated-method-mapping";
 import doc from "./openrpc.json";
-
+import fs from "fs";
 export async function start() {
   const serverOptions: ServerOptions = {
     openrpcDocument: await parseOpenRPCDocument(doc as OpenrpcDocument),
@@ -15,6 +15,16 @@ export async function start() {
         options: {
           port: process.env.HTTP_PORT ? parseInt(process.env.HTTP_PORT, 10) : 4441,
           middleware: [],
+        } as HTTPServerTransportOptions,
+      },
+      {
+        type: "HTTPSTransport",
+        options: {
+          port: process.env.HTTPS_PORT ? parseInt(process.env.HTTPS_PORT, 10) : 4442,
+          middleware: [],
+          key: fs.readFileSync("./ssl/server.key"),
+          cert:fs.readFileSync("./ssl/server.cert"),
+
         } as HTTPServerTransportOptions,
       },
       {
@@ -32,4 +42,7 @@ export async function start() {
   const s = new Server(serverOptions);
 
   s.start();
+  if (serverOptions.transportConfigs) {
+    console.log(serverOptions.transportConfigs.map((t: any) => `${t.type} running on: ${t.options.port}`).join("\n")); //tslint:disable-line
+  }
 }
