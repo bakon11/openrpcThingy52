@@ -3,8 +3,16 @@ var humid = new Float32Array(100); // our logged data
 var light = new Float32Array(100); // our logged data
 var battery = new Float32Array(100);
 var logIndex = 0; // index of last logged data item
-var timePeriod = 60*100; // every minute
+var timePeriod = 10*1000; // how often to pull data
 var lastReadingTime; // time of last reading
+
+NRF.on('connect',()=>{
+  digitalPulse(LED2,1,200);
+});
+NRF.on('disconnect',()=>{
+  digitalPulse(LED1,1,200);
+});
+
 // Store data into RAM
 function storeMyData(sensor, data) {
   logIndex++;
@@ -15,7 +23,6 @@ function storeMyData(sensor, data) {
 function monitorSensors() {
   // Get Temp and Humidity
   Thingy.getHumidity((data) => {
-    console.log(data);
     sensorTemp = data.temperature ;
     sensorHumid = data.humidity;
     storeMyData(temp,sensorTemp);
@@ -23,13 +30,11 @@ function monitorSensors() {
   });
   // gett light intensity
   Thingy.getColor((data) =>{
-    console.log(data);
     sensorLight = data.c;
     storeMyData(light,sensorLight);
   });
   // Get Battery status
   Thingy.getBattery((data) => {
-    console.log(data);
     var volt = data.voltage;
     var charging = data.charging;
     storeMyData(battery,volt);
@@ -42,7 +47,6 @@ function exportData(sensor) {
   for (var i=1;i<=sensor.length;i++) {
     var time = new Date(lastReadingTime - (sensor.length-i));
     var data = sensor[(i+logIndex)%sensor.length].toFixed(2);
-    // console.log(time+": "+data);
     if(data !=0) sensorData.push({
       date:time,
       sensor:data
@@ -51,4 +55,4 @@ function exportData(sensor) {
   return sensorData;
 }
 // Start recording Sensors
-monitorSensors(monitorSensors, timePeriod);
+setInterval(monitorSensors, timePeriod);
