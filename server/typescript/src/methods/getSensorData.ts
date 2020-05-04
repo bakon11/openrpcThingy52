@@ -9,8 +9,7 @@ const querySensors = (deviceID:any, sensorType: any):Promise<any> => {
   return new Promise((resolve, reject) => {  
     esp.init((data:any) => {
       esp.expr(deviceID, 'exportData('+sensorType+')', function(data:any){
-        // return Promise.resolve(JSON.parse(data));
-        resolve(data);
+        return Promise.resolve(JSON.parse(data));
       });
     });
   });
