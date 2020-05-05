@@ -3,8 +3,8 @@
     "outDir": "./",
     "components": [
         {
-            "type": "server",
-            "name": "",
+            "type": "client",
+            "name": "openrpcthingyclient,
             "language": "typescript"
         }
     ]

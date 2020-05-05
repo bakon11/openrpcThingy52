@@ -1,0 +1,100 @@
+{
+  "openrpc": "1.2.4",
+  "info": {
+    "title": "openrpcthingy52",
+    "version": "1.0.0",
+    "description": "openRPC middleware for devices that interface with nordic thingy52 running espurino firmware",
+    "termsOfService": "https://github.com/bakon11/openrpcthingy52/",
+    "contact": {
+      "name": "bakon",
+      "email": "bakon@bakon.dev",
+      "url": "https://bakon.dev"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "servers": [
+    {
+      "name": "Device which will be interfacing with yout Espruino powered thingy52",
+      "url": "http://localhost:3000"
+    }
+  ],
+  "methods": [
+    {
+      "name": "startScan",
+      "description": "Scans for BLE devices",
+      "params": [],
+      "result": {
+        "name": "scanDevicesResult",
+        "description": "Returns all BLE devices in vicinity",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "name": "stopScan",
+      "description": "Stops scaning for BLE devices",
+      "params": [],
+      "result": {
+        "name": "stopScanResult",
+        "description": "Returns status fo stop scan command",
+        "schema": {
+          "type": "string"
+        }
+      }
+    },
+    {
+      "name": "getSensorData",
+      "description": "Gets recorded sensor data",
+      "params": [
+        {
+          "$ref": "#/components/contentDescriptors/deviceID"
+        },
+        {
+          "$ref": "#/components/contentDescriptors/sensorType"
+        }
+      ],
+      "result": {
+        "name": "getPressureResult",
+        "description": "Returns pressure and temp readings from board",
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  ],
+  "components": {
+    "contentDescriptors": {
+      "deviceID": {
+        "name": "deviceID",
+        "description": "Device id to query",
+        "required": true,
+        "schema": {
+          "title": "deviceID",
+          "type": "string"
+        }
+      },
+      "sensorType": {
+        "name": "sensorType",
+        "description": "sensor data to fetch",
+        "required": true,
+        "schema": {
+          "title": "sensorType",
+          "type": "string"
+        }
+      },
+      "deviceData": {
+        "name": "deviceData",
+        "description": "device data to be recorded",
+        "required": true,
+        "schema": {
+          "title": "deviceData",
+          "type": "string"
+        }
+      }
+    }
+  }
+}
